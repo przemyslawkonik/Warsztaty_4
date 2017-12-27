@@ -1,6 +1,6 @@
 $(function () {
 
-    var baseUrl = 'http://localhost:8282/';
+    var baseUrl = 'http://localhost:8080/Warsztaty_5/';
     var list = $('ul.books');
     var form = $('form.save');
 
@@ -55,7 +55,7 @@ $(function () {
             headers: {
                 'Content-Type': 'application/json'
             },
-            url: baseUrl + 'books/add',
+            url: baseUrl + 'books',
             data: JSON.stringify(book)
         }).done(function () {
             renderList();
@@ -66,7 +66,7 @@ $(function () {
 
     list.on('click', 'button.delete', function (e) {
         $.ajax({
-            url: baseUrl + 'books/remove/' + $(e.currentTarget).closest('li').data('id'),
+            url: baseUrl + 'books/' + $(e.currentTarget).closest('li').data('id'),
             type: 'DELETE'
         }).done(function () {
             renderList();
@@ -76,15 +76,17 @@ $(function () {
 
     list.on('click', 'button.edit', function (e) {
         var book = createBookEntityFromForm(form);
-        var id = $(e.currentTarget).closest('li').data('id');
-        book.id = id;
         $.ajax({
-            url: baseUrl + 'books/' + id + '/update',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            url: baseUrl + 'books/' + $(e.currentTarget).closest('li').data('id'),
             type: 'PUT',
             data: JSON.stringify(book)
         }).done(function () {
             renderList();
         });
+        $(form).trigger('reset');
         e.stopPropagation();
     });
 
